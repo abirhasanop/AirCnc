@@ -5,7 +5,7 @@ import { AuthContext } from '../contexts/AuthProvider'
 import PrimaryButton from '../Components/Button/PrimaryButton'
 
 const Navbar = () => {
-  const { user } = useContext(AuthContext)
+  const { user, logout } = useContext(AuthContext)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
   return (
@@ -74,7 +74,7 @@ const Navbar = () => {
                         ></path>
                       </svg>
 
-                      <span className='mx-1'>Sign Out</span>
+                      <span onClick={logout} className='mx-1'>Sign Out</span>
                     </div>
                   </div>
                 )}

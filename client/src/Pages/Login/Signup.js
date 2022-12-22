@@ -1,9 +1,101 @@
-import React from 'react'
-
+import React, { useContext, useState } from 'react'
 import { Link } from 'react-router-dom'
 import PrimaryButton from '../../Components/Button/PrimaryButton'
+import SmallSpinner from '../../Components/Spinner/SmallSpinner'
+import { AuthContext } from '../../contexts/AuthProvider'
+
 
 const Signup = () => {
+  const { createUser, loading, setLoading, updateUserProfile, verifyEmail } = useContext(AuthContext)
+
+  const [error, setError] = useState({
+    email: "",
+    password: ""
+  })
+  const [userInfo, setUserInfo] = useState({
+    email: "",
+    password: "",
+    name: "",
+    image: ""
+  })
+
+  const handleSubmit = (e) => {
+    setLoading(true)
+    e.preventDefault()
+
+    createUser(userInfo.email, userInfo.password)
+      .then(result => {
+        const user = result.user
+        console.log(user);
+        setLoading(false)
+      })
+      .catch(err => {
+        console.log(err);
+        setLoading(false)
+      })
+  }
+
+  // name
+  const handleNameChange = (e) => {
+    setUserInfo({ ...userInfo, name: e.target.value })
+  }
+
+  // image
+  const handleImageChange = (e) => {
+    const image = e.target.files[0]
+    console.log(image);
+    setUserInfo({ ...userInfo, image: e.target.value })
+  }
+
+  // email validation
+  const handleEmailChange = (e) => {
+    const email = e.target.value
+
+    if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+      setError({ ...error, email: "Please provide a valid email" })
+      setUserInfo({ ...userInfo, email: "" })
+    } else {
+      setError({ ...error, email: "" })
+      setUserInfo({ ...userInfo, email: email })
+    }
+
+  }
+  // password validation
+  const handlePasswordChange = (e) => {
+    const password = e.target.value
+
+    const lengthError = password.length < 6;
+    const noSymbolError = !/[\!\@\#\$\%\^\&\*]{1,}/.test(password);
+    const noCapitalLetterError = !/[A-Z]{1,}/.test(password);
+    // have doubt on this redx
+    const noNumberError = !/(?=.*[0-9].*[0-9])/.test(password)
+
+    if (lengthError) {
+      setError({ ...error, password: "Password must have more that 6 charecters" })
+      setUserInfo({ ...userInfo, password: "" })
+    } else if (noNumberError) {
+      setError({ ...error, password: "Password must have atleast 2 digits" })
+      setUserInfo({ ...userInfo, password: "" })
+    }
+    else if (noSymbolError) {
+      setError({ ...error, password: "Password must have speacial charencters" })
+      setUserInfo({ ...userInfo, password: "" })
+    } else if (noCapitalLetterError) {
+      setError({ ...error, password: "Password must have atleast one capital latter" })
+      setUserInfo({ ...userInfo, password: "" })
+    }
+    else {
+      setError({ ...error, password: "" })
+      setUserInfo({ ...userInfo, password: password })
+    }
+  }
+
+
+  // console.log(userInfo);
+
+
+
+
   return (
     <div className='flex justify-center items-center pt-8'>
       <div className='flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-gray-100 text-gray-900'>
@@ -15,6 +107,7 @@ const Signup = () => {
           noValidate=''
           action=''
           className='space-y-12 ng-untouched ng-pristine ng-valid'
+          onSubmit={handleSubmit}
         >
           <div className='space-y-4'>
             <div>
@@ -29,6 +122,7 @@ const Signup = () => {
                 placeholder='Enter Your Name Here'
                 className='w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-green-500 bg-gray-200 text-gray-900'
                 data-temp-mail-org='0'
+                onChange={handleNameChange}
               />
             </div>
             <div>
@@ -40,7 +134,7 @@ const Signup = () => {
                 id='image'
                 name='image'
                 accept='image/*'
-                required
+                onChange={handleImageChange}
               />
             </div>
             <div>
@@ -48,14 +142,19 @@ const Signup = () => {
                 Email address
               </label>
               <input
-                required
                 type='email'
                 name='email'
                 id='email'
+                required
                 placeholder='Enter Your Email Here'
-                className='w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-green-500 bg-gray-200 text-gray-900'
+                className={`w-full px-3 py-2 border rounded-md border-gray-300  bg-gray-200 text-gray-900
+                ${error.email ? "focus:outline-red-500" : "focus:outline-green-500"}
+                `}
                 data-temp-mail-org='0'
+                // value={userInfo.email}
+                onChange={handleEmailChange}
               />
+              {error.email && <p className='text-red-500'>{error.email}</p>}
             </div>
             <div>
               <div className='flex justify-between mb-2'>
@@ -69,8 +168,13 @@ const Signup = () => {
                 id='password'
                 required
                 placeholder='*******'
-                className='w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-200 focus:outline-green-500 text-gray-900'
+                className={`w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-200 text-gray-900
+                ${error.password ? "focus:outline-red-500" : "focus:outline-green-500"}
+                `}
+                // value={userInfo.password}
+                onChange={handlePasswordChange}
               />
+              {error.password && <p className='text-red-500'>{error.password}</p>}
             </div>
           </div>
           <div className='space-y-2'>
@@ -79,7 +183,7 @@ const Signup = () => {
                 type='submit'
                 classes='w-full px-8 py-3 font-semibold rounded-md bg-gray-900 hover:bg-gray-700 hover:text-white text-gray-100'
               >
-                Sign up
+                {loading ? <SmallSpinner /> : "Sign Up"}
               </PrimaryButton>
             </div>
           </div>

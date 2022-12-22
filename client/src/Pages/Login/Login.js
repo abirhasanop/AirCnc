@@ -1,8 +1,60 @@
-import React from 'react'
+import React, { useContext, useState } from 'react'
 import { Link } from 'react-router-dom'
 import PrimaryButton from '../../Components/Button/PrimaryButton'
+import SmallSpinner from '../../Components/Spinner/SmallSpinner'
+import { AuthContext } from '../../contexts/AuthProvider'
 
 const Login = () => {
+  const { signin, loading, setLoading } = useContext(AuthContext)
+
+  const [error, setError] = useState({
+    email: "",
+    password: ""
+  })
+  const [userInfo, setUserInfo] = useState({
+    email: "",
+    password: ""
+  })
+
+  const handleSubmit = (e) => {
+    setLoading(true)
+    e.preventDefault()
+    signin(userInfo.email, userInfo.password)
+      .then(result => {
+        const user = result.user
+        setLoading(false)
+        console.log(user);
+      })
+      .then(err => {
+        console.log(err);
+        setLoading(false)
+      })
+  }
+
+
+  // email validation
+  const handleEmailChange = (e) => {
+    const email = e.target.value
+
+    if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+      setError({ ...error, email: "Please provide a valid email" })
+      setUserInfo({ ...userInfo, email: "" })
+    } else {
+      setError({ ...error, email: "" })
+      setUserInfo({ ...userInfo, email: email })
+    }
+
+    // password validation
+  }
+  const handlePasswordChange = (e) => {
+    const password = e.target.value
+    setUserInfo({ ...userInfo, password: password })
+  }
+
+
+  console.log(userInfo);
+
+
   return (
     <div className='flex justify-center items-center pt-8'>
       <div className='flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-gray-100 text-gray-900'>
@@ -16,6 +68,7 @@ const Login = () => {
           noValidate=''
           action=''
           className='space-y-6 ng-untouched ng-pristine ng-valid'
+          onSubmit={handleSubmit}
         >
           <div className='space-y-4'>
             <div>
@@ -28,9 +81,12 @@ const Login = () => {
                 id='email'
                 required
                 placeholder='Enter Your Email Here'
-                className='w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-green-500 bg-gray-200 text-gray-900'
+                className={`w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-green-500  bg-gray-200 text-gray-900`}
                 data-temp-mail-org='0'
+                // value={userInfo.email}
+                onChange={handleEmailChange}
               />
+              {error.email && <p className='text-red-500'>{error.email}</p>}
             </div>
             <div>
               <div className='flex justify-between'>
@@ -44,8 +100,11 @@ const Login = () => {
                 id='password'
                 required
                 placeholder='*******'
-                className='w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-green-500 bg-gray-200 text-gray-900'
+                className={`w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-green-500 bg-gray-200 text-gray-900`}
+                // value={userInfo.password}
+                onChange={handlePasswordChange}
               />
+              {/* {error.password && <p className='text-red-500'>{error.password}</p>} */}
             </div>
           </div>
 
@@ -54,7 +113,7 @@ const Login = () => {
               type='submit'
               classes='w-full px-8 py-3 font-semibold rounded-md bg-gray-900 hover:bg-gray-700 hover:text-white text-gray-100'
             >
-              Sign in
+              {loading ? <SmallSpinner /> : "Sign In"}
             </PrimaryButton>
           </div>
         </form>
