@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import PrimaryButton from '../../Components/Button/PrimaryButton'
 import SmallSpinner from '../../Components/Spinner/SmallSpinner'
 import { AuthContext } from '../../contexts/AuthProvider'
+import { toast } from 'react-hot-toast'
 
 
 const Signup = () => {
@@ -12,6 +13,7 @@ const Signup = () => {
     email: "",
     password: ""
   })
+
   const [userInfo, setUserInfo] = useState({
     email: "",
     password: "",
@@ -27,7 +29,18 @@ const Signup = () => {
       .then(result => {
         const user = result.user
         console.log(user);
-        setLoading(false)
+
+        updateUserProfile(userInfo?.name, userInfo?.image)
+          .then(() => {
+            verifyEmail()
+              .then(() => {
+                toast.success("Please check your email for varification link")
+                setLoading(false)
+              })
+          })
+
+
+
       })
       .catch(err => {
         console.log(err);
@@ -43,8 +56,20 @@ const Signup = () => {
   // image
   const handleImageChange = (e) => {
     const image = e.target.files[0]
-    console.log(image);
-    setUserInfo({ ...userInfo, image: e.target.value })
+    const formData = new FormData()
+    formData.append("image", image)
+
+    const url = `https://api.imgbb.com/1/upload?key=2a830f3c99c9a834a28224e21137626a`
+
+    fetch(url, {
+      method: "POST",
+      body: formData
+    })
+      .then(res => res.json())
+      .then(data => {
+        setUserInfo({ ...userInfo, image: data.data.display_url })
+      })
+      .catch(err => console.error(err))
   }
 
   // email validation
@@ -89,9 +114,6 @@ const Signup = () => {
       setUserInfo({ ...userInfo, password: password })
     }
   }
-
-
-  // console.log(userInfo);
 
 
 
