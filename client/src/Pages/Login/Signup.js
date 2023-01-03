@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import PrimaryButton from '../../Components/Button/PrimaryButton'
 import SmallSpinner from '../../Components/Spinner/SmallSpinner'
 import { AuthContext } from '../../contexts/AuthProvider'
@@ -7,13 +7,12 @@ import { toast } from 'react-hot-toast'
 
 
 const Signup = () => {
-  const { createUser, loading, setLoading, updateUserProfile, verifyEmail } = useContext(AuthContext)
+  const { createUser, loading, setLoading, updateUserProfile, verifyEmail, signInWithGoogle } = useContext(AuthContext)
 
   const [error, setError] = useState({
     email: "",
     password: ""
   })
-
   const [userInfo, setUserInfo] = useState({
     email: "",
     password: "",
@@ -21,6 +20,12 @@ const Signup = () => {
     image: ""
   })
 
+
+  const navigate = useNavigate()
+  const location = useLocation()
+  const from = location.state?.from?.pathname || "/"
+
+  // submit
   const handleSubmit = (e) => {
     setLoading(true)
     e.preventDefault()
@@ -35,6 +40,7 @@ const Signup = () => {
             verifyEmail()
               .then(() => {
                 toast.success("Please check your email for varification link")
+                navigate(from, { replace: true })
                 setLoading(false)
               })
           })
@@ -115,6 +121,15 @@ const Signup = () => {
     }
   }
 
+
+  // Google sign in
+  const handleGoogleSignIn = () => {
+    signInWithGoogle()
+      .then(() => {
+        toast.success("Account Created Successfully")
+        navigate(from, { replace: true })
+      })
+  }
 
 
 
@@ -218,7 +233,7 @@ const Signup = () => {
           <div className='flex-1 h-px sm:w-16 dark:bg-gray-700'></div>
         </div>
         <div className='flex justify-center space-x-4'>
-          <button aria-label='Log in with Google' className='p-3 rounded-sm'>
+          <button onClick={handleGoogleSignIn} aria-label='Log in with Google' className='p-3 rounded-sm'>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               viewBox='0 0 32 32'

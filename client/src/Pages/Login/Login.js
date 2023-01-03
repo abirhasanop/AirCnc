@@ -1,11 +1,12 @@
 import React, { useContext, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { toast } from 'react-hot-toast'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import PrimaryButton from '../../Components/Button/PrimaryButton'
 import SmallSpinner from '../../Components/Spinner/SmallSpinner'
 import { AuthContext } from '../../contexts/AuthProvider'
 
 const Login = () => {
-  const { signin, loading, setLoading } = useContext(AuthContext)
+  const { signin, loading, setLoading, signInWithGoogle, resetPassword } = useContext(AuthContext)
 
   const [error, setError] = useState({
     email: "",
@@ -16,6 +17,11 @@ const Login = () => {
     password: ""
   })
 
+  const navigate = useNavigate()
+  const location = useLocation()
+  const from = location.state?.from?.pathname || "/"
+
+  // submit
   const handleSubmit = (e) => {
     setLoading(true)
     e.preventDefault()
@@ -23,11 +29,14 @@ const Login = () => {
       .then(result => {
         const user = result.user
         setLoading(false)
+        toast.success("Login Successful")
+        navigate(from, { replace: true })
         console.log(user);
       })
-      .then(err => {
-        console.log(err);
+      .catch(err => {
         setLoading(false)
+        console.error(err);
+        toast.error(err.message)
       })
   }
 
@@ -46,13 +55,34 @@ const Login = () => {
 
     // password validation
   }
+  // password validation
   const handlePasswordChange = (e) => {
     const password = e.target.value
     setUserInfo({ ...userInfo, password: password })
   }
 
 
-  console.log(userInfo);
+  // Google sign in
+  const handleGoogleSignIn = () => {
+    signInWithGoogle()
+      .then(() => {
+        toast.success("Login Successful")
+        navigate(from, { replace: true })
+      })
+  }
+
+  // Password Reset
+  const handleResetPass = () => {
+    resetPassword(userInfo?.email)
+      .then(() => {
+        toast.success("Please Check Your Email Resetting Your Password")
+        setLoading(false)
+      }).catch(err => {
+        console.error(err);
+        toast.error(err.message)
+        setLoading(false)
+      })
+  }
 
 
   return (
@@ -118,7 +148,7 @@ const Login = () => {
           </div>
         </form>
         <div className='space-y-1'>
-          <button className='text-xs hover:underline text-gray-400'>
+          <button onClick={handleResetPass} className='text-xs hover:underline text-gray-400'>
             Forgot password?
           </button>
         </div>
@@ -130,7 +160,7 @@ const Login = () => {
           <div className='flex-1 h-px sm:w-16 dark:bg-gray-700'></div>
         </div>
         <div className='flex justify-center space-x-4'>
-          <button aria-label='Log in with Google' className='p-3 rounded-sm'>
+          <button onClick={handleGoogleSignIn} aria-label='Log in with Google' className='p-3 rounded-sm'>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               viewBox='0 0 32 32'
