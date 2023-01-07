@@ -4,6 +4,7 @@ import PrimaryButton from '../../Components/Button/PrimaryButton'
 import SmallSpinner from '../../Components/Spinner/SmallSpinner'
 import { AuthContext } from '../../contexts/AuthProvider'
 import { toast } from 'react-hot-toast'
+import { setAuthToken } from '../../Api/auth'
 
 
 const Signup = () => {
@@ -34,6 +35,7 @@ const Signup = () => {
       .then(result => {
         const user = result.user
         console.log(user);
+        setAuthToken(user)
 
         updateUserProfile(userInfo?.name, userInfo?.image)
           .then(() => {
@@ -65,7 +67,7 @@ const Signup = () => {
     const formData = new FormData()
     formData.append("image", image)
 
-    const url = `https://api.imgbb.com/1/upload?key=2a830f3c99c9a834a28224e21137626a`
+    const url = `https://api.imgbb.com/1/upload?key=20e217807e5b93e67747b8407c24eff4`
 
     fetch(url, {
       method: "POST",
@@ -125,7 +127,10 @@ const Signup = () => {
   // Google sign in
   const handleGoogleSignIn = () => {
     signInWithGoogle()
-      .then(() => {
+      .then((result) => {
+        const user = result.user
+        console.log(user);
+        setAuthToken(user)
         toast.success("Account Created Successfully")
         navigate(from, { replace: true })
       })

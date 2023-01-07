@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { setAuthToken } from '../../Api/auth'
 import PrimaryButton from '../../Components/Button/PrimaryButton'
 import SmallSpinner from '../../Components/Spinner/SmallSpinner'
 import { AuthContext } from '../../contexts/AuthProvider'
@@ -28,6 +29,8 @@ const Login = () => {
     signin(userInfo.email, userInfo.password)
       .then(result => {
         const user = result.user
+        // get token and set user info to data base
+        setAuthToken(user)
         setLoading(false)
         toast.success("Login Successful")
         navigate(from, { replace: true })
@@ -65,7 +68,10 @@ const Login = () => {
   // Google sign in
   const handleGoogleSignIn = () => {
     signInWithGoogle()
-      .then(() => {
+      .then((result) => {
+        const user = result.user
+        console.log(user);
+        setAuthToken(user)
         toast.success("Login Successful")
         navigate(from, { replace: true })
       })
