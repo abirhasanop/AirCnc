@@ -29,7 +29,7 @@ const Checkout = () => {
         reviews: 64,
     }
     const [bookingData, setBookingData] = useState({
-        homeId: homeData._id,
+        homeId: homeData?._id,
         hostEmail: homeData?.host?.email,
         message: '',
         totalPrice: parseFloat(homeData.price) + 31,

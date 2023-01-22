@@ -45,37 +45,37 @@ const ReviewHouse = ({ setSelectedIndex }) => {
       <hr />
       <p className='text-xl font-bold my-4'>Things to keep in mind</p>
       <div>
-        <div class='flex flex-col items-center my-2 mt-8 mx-auto max-w-7xl sm:flex-row'>
-          <div class='inline-flex p-2 border items-center justify-center flex-shrink-0 mt-1 text-neutral-600 bg-gray-50 sm:mr-3'>
+        <div className='flex flex-col items-center my-2 mt-8 mx-auto max-w-7xl sm:flex-row'>
+          <div className='inline-flex p-2 border items-center justify-center flex-shrink-0 mt-1 text-neutral-600 bg-gray-50 sm:mr-3'>
             <UserGroupIcon className=' w-5 h-5' />
           </div>
-          <div class='flex-grow prose sm:text-left prose-md'>
+          <div className='flex-grow prose sm:text-left prose-md'>
             <p className='text-gray-800 text-medium'>
               Suitable for children and infants
             </p>
           </div>
         </div>
-        <div class='flex flex-col items-center  my-2 mx-auto max-w-7xl sm:flex-row'>
-          <div class='inline-flex p-2 border items-center justify-center flex-shrink-0 mt-1 text-neutral-600 bg-gray-50 sm:mr-3'>
+        <div className='flex flex-col items-center  my-2 mx-auto max-w-7xl sm:flex-row'>
+          <div className='inline-flex p-2 border items-center justify-center flex-shrink-0 mt-1 text-neutral-600 bg-gray-50 sm:mr-3'>
             <FaceSmileIcon className=' w-5 h-5' />
           </div>
-          <div class='flex-grow prose sm:text-left prose-md'>
+          <div className='flex-grow prose sm:text-left prose-md'>
             <p className='text-gray-800 text-medium'>Pets allowed</p>
           </div>
         </div>
-        <div class='flex flex-col items-center  my-2 mx-auto max-w-7xl sm:flex-row'>
-          <div class='inline-flex p-2 border items-center justify-center flex-shrink-0 mt-1 text-neutral-600 bg-gray-50 sm:mr-3'>
+        <div className='flex flex-col items-center  my-2 mx-auto max-w-7xl sm:flex-row'>
+          <div className='inline-flex p-2 border items-center justify-center flex-shrink-0 mt-1 text-neutral-600 bg-gray-50 sm:mr-3'>
             <NoSymbolIcon className=' w-5 h-5' />
           </div>
-          <div class='flex-grow prose sm:text-left prose-md'>
+          <div className='flex-grow prose sm:text-left prose-md'>
             <p className='text-gray-800 text-medium'>No parties or events</p>
           </div>
         </div>
-        <div class='flex flex-col items-center  my-2 mx-auto max-w-7xl sm:flex-row'>
-          <div class='inline-flex p-2 border items-center justify-center flex-shrink-0 mt-1 text-neutral-600 bg-gray-50 sm:mr-3'>
+        <div className='flex flex-col items-center  my-2 mx-auto max-w-7xl sm:flex-row'>
+          <div className='inline-flex p-2 border items-center justify-center flex-shrink-0 mt-1 text-neutral-600 bg-gray-50 sm:mr-3'>
             <FireIcon className=' w-5 h-5' />
           </div>
-          <div class='flex-grow prose sm:text-left prose-md'>
+          <div className='flex-grow prose sm:text-left prose-md'>
             <p className='text-gray-800 text-medium'>Smoking allowed</p>
           </div>
         </div>

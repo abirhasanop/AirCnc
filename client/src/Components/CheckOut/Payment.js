@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Payment = () => {
+const Payment = ({ handleBooking }) => {
   return (
     <>
       <h1 className='text-2xl font-bold'>Payment Selection</h1>
@@ -16,7 +16,7 @@ const Payment = () => {
 
       <button
         className='py-2 px-4 rounded-md hover:text-gray-100 bg-gradient-to-r from-emerald-500 to-lime-500 text-white'
-        onClick={() => alert('Payment Done!')}
+        onClick={() => handleBooking()}
       >
         Pay
       </button>
