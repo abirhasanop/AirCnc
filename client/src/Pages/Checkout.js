@@ -5,6 +5,8 @@ import WhosComing from '../Components/CheckOut/WhosComing';
 import { AuthContext } from '../contexts/AuthProvider';
 import { Tab } from '@headlessui/react'
 import ReviewHouse from '../Components/CheckOut/ReviewHouse';
+import { saveBooking } from '../Api/bookings';
+import { toast } from 'react-hot-toast';
 
 const Checkout = () => {
 
@@ -37,18 +39,19 @@ const Checkout = () => {
     })
     const [selectedIndex, setSelectedIndex] = useState(0)
 
+    // Pay
     const handleBooking = () => {
         console.log(bookingData)
 
-        // saveBooking(bookingData)
-        //     .then(data => {
-        //         console.log(data)
-        //         toast.success('Booking Successful!')
-        //     })
-        //     .catch(err => {
-        //         console.log(err)
-        //         toast.error(err?.message)
-        //     })
+        saveBooking(bookingData)
+            .then(data => {
+                console.log(data)
+                toast.success('Booking Successful!')
+            })
+            .catch(err => {
+                console.log(err)
+                toast.error(err?.message)
+            })
     }
 
 

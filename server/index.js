@@ -26,6 +26,7 @@ async function run() {
   try {
     const homesCollection = client.db('airCnC-db').collection('homes')
     const usersCollection = client.db('airCnC-db').collection('users')
+    const bookingsCollection = client.db('airCnC-db').collection('bookings')
 
     // save user and generate jwt
     app.put("/user/:email", async (req, res) => {
@@ -42,6 +43,15 @@ async function run() {
       const token = jwt.sign(user, process.env.SECRET_TOKEN)
       console.log(token);
       res.send({ result, token })
+    })
+
+
+    // Save bookings to database
+    app.post("/bookings", async (req, res) => {
+      const bookingData = req.body
+      const result = await bookingsCollection.insertOne(bookingData)
+      console.log(result);
+      res.send(result)
     })
 
     console.log('Database Connected...')
