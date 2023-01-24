@@ -52,6 +52,18 @@ async function run() {
       const result = await bookingsCollection.insertOne(bookingData)
       console.log(result);
       res.send(result)
+
+
+      // Get all bookings from database
+      app.get("/bookings", async (req, res) => {
+        const email = req.query.email
+        let query = {}
+        if (email) {
+          query = { guestEmail: email }
+        }
+        const booking = await bookingsCollection.find(query).toArray()
+        res.send(booking)
+      })
     })
 
     console.log('Database Connected...')

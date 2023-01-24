@@ -68,11 +68,12 @@ const Sidebar = ({ role, loading }) => {
                     {/* Nav Items */}
                     <div className='flex flex-col justify-between flex-1 mt-6'>
                         <nav>
-                            {role && role !== 'requested' ? (
+                            {/* {role && role !== 'requested' ? (
                                 <>{role === 'admin' ? <AdminMenu /> : <HostMenu />} </>
                             ) : (
                                 <UserMenu />
-                            )}
+                            )} */}
+                            <UserMenu />
                         </nav>
                     </div>
                 </div>
